@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import agenteImg from './assets/gerente.png';
 import { db } from '../src/data/db.js';
 import Persona from './Persona.jsx';
@@ -196,7 +196,7 @@ function App() {
           <div className="container mx-auto text-center">
             <h1 className="text-3xl mb-8">Configuración de Simulación</h1>
             <div className="mb-4">
-              <label className="block text-left text-center">Duración en segundos de la simulación:</label>
+              <label className="block text-center">Duración en segundos de la simulación:</label>
               <input
                 type="number"
                 className="border-2 border-gray-300 p-2"
@@ -207,7 +207,7 @@ function App() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-left text-center">Tasa de llegada de clientes por minuto:</label>
+              <label className="block text-center">Tasa de llegada de clientes por minuto:</label>
               <input
                 type="number"
                 className="border-2 border-gray-300 p-2"
@@ -218,7 +218,7 @@ function App() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-left text-center">Tasa de servicio por minuto (por agente):</label>
+              <label className="block text-center">Tasa de servicio por minuto (por agente):</label>
               <input
                 type="number"
                 className="border-2 border-gray-300 p-2"
@@ -229,7 +229,7 @@ function App() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-left text-center">Número de servidores (1-3):</label>
+              <label className="block text-center">Número de servidores (1-3):</label>
               <input
                 type="number"
                 className="border-2 border-gray-300 p-2"
