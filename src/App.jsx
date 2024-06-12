@@ -4,6 +4,32 @@ import { db } from '../src/data/db.js';
 import Persona from './Persona.jsx';
 import * as math from 'mathjs';
 import { calcularL, calcularLq, calcularPw, calcularW, calcularWq } from './data/metodoscolas.js';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  BarController,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  BarController,
+);
+
 
 function App() {
   const [cola, setCola] = useState([]);
@@ -97,7 +123,7 @@ function App() {
         setInterval(() => {
           setTiemposLlamada(prev => {
             const nuevosTiempos = [...prev];
-            if (nuevosTiempos[index] >= intervaloServicio / 1000) { 
+            if (nuevosTiempos[index] >= intervaloServicio / 1000) {
               finalizarLlamada(index);
             }
             nuevosTiempos[index] += 1;
@@ -189,6 +215,71 @@ function App() {
     return 1 / (sumatoria + segundoTermino);
   };
 
+  const dataBar = {
+    labels: ['Utilización promedio', 'Probabilidad de que el sistema esté vacío', 'Número promedio de llamadas en cola (Lq)', 'Número promedio de llamadas en el sistema (L)', 'Probabilidad de esperar (Pw)', 'Tiempo promedio en cola (Wq)', 'Tiempo promedio en el sistema (W)'],
+    datasets: [
+      {
+        label: 'Resultados de la Simulación',
+        data: [
+          utilizacionPromedio,
+          probabilidadSistemaVacio,
+          Lq,
+          L,
+          Pw,
+          Wq,
+          W
+        ],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 1
+      }
+    ]
+  };
+  
+  const optionsBar = {
+    indexAxis: 'y',
+    scales: {
+      x: {
+        ticks: {
+          beginAtZero: true
+        }
+      }
+    },
+    plugins: {
+      title: {
+        display: true,
+        text: 'Resultados de la Simulación',
+        font: {
+          size: 24 
+        }
+      },
+      legend: {
+        labels: {
+          font: {
+            size: 16
+          }
+        }
+      }
+    }
+  };
+  
+
   return (
     <div>
       {mostrarVentanaInicial ? (
@@ -239,7 +330,7 @@ function App() {
                 required
               />
             </div>
-            <button className="px-4 py-2 bg-blue-500 text-white rounded" onClick={iniciarSimulacion}>
+            <button className="px-4 py-2 bg-blue-500 text-white rounded mr-5" onClick={iniciarSimulacion}>
               Iniciar Simulación
             </button>
           </div>
@@ -249,15 +340,8 @@ function App() {
           {simulacionFinalizada ? (
             <div className="flex justify-center items-center min-h-screen">
               <div className="container mx-auto text-center">
-                <h1 className="text-3xl mb-4">Simulación Finalizada</h1>
-                <p>Utilización promedio del sistema (p): {(utilizacionPromedio * 100).toFixed(2)}%</p>
-                <p>Probabilidad de que el sistema esté vacío (P0): {(probabilidadSistemaVacio * 100).toFixed(2)}%</p>
-                <p>Cantidad promedio de clientes en cola (Lq): {Lq.toFixed(2)}</p>
-                <p>Cantidad promedio de clientes en el sistema (L): {L.toFixed(2)}</p>
-                <p>Probabilidad de que un cliente tenga que esperar (Pw): {(Pw * 100).toFixed(2)}%</p>
-                <p>Tiempo promedio en cola (Wq): {Wq.toFixed(2)} segundos</p>
-                <p>Tiempo promedio transcurrido en el sistema (W): {W.toFixed(2)} segundos</p>
-                <button className="mt-4 px-4 py-2 bg-gray-500 text-white rounded" onClick={volverVentanaInicial}>
+                <Bar data={dataBar} options={optionsBar} />
+                <button className="mt-4 px-4 py-2 bg-gray-500 text-white rounded ml-5" onClick={volverVentanaInicial}>
                   Volver a Configuración
                 </button>
               </div>
@@ -268,7 +352,7 @@ function App() {
                 <h1 className="text-3xl mb-4">Simulación en Proceso</h1>
                 <div>
                   <button
-                    className={`mt-4 px-4 py-2 ${simulacionActiva ? 'bg-red-500' : 'bg-blue-500'} text-white rounded`}
+                    className={`mt-4 px-4 py-2 mr-5 ${simulacionActiva ? 'bg-red-500' : 'bg-blue-500'} text-white rounded`}
                     onClick={() => setSimulacionActiva(!simulacionActiva)}
                   >
                     {simulacionActiva ? 'Detener Simulación' : 'Iniciar Simulación'}
@@ -285,10 +369,10 @@ function App() {
                 <div className="grid grid-cols-3 gap-4 mt-4">
                   {agentes.map((agente, index) => (
                     <div key={index} className="bg-yellow-200 justify-center text-center items-center">
-                      <h1 className="p-3">Agente {index + 1}</h1>
+                      <h1 className="p-3 font-bold">Agente {index + 1}</h1>
                       <img className="sm:h-40 md:h-48 mx-auto" src={agenteImg} alt="Agente" />
                       <div className="bg-yellow-200 border-4 border-red-500 rounded-lg m-3">
-                        <h1 className="text-left p-3">{agente.personaLlamada ? `Atendiendo a: ${agente.personaLlamada.nombre}` : 'Agente Libre'}</h1>
+                        <h1 className="text-left p-3 font-bold">{agente.personaLlamada ? `Atendiendo a: ${agente.personaLlamada.nombre}` : 'Agente Libre'}</h1>
                         {agente.personaLlamada && (
                           <div>
                             <img className="sm:h-40 md:h-48 mx-auto" src={`/img/${agente.personaLlamada.imagen}.png`} alt="Persona Atendiendo" />
@@ -300,7 +384,7 @@ function App() {
                     </div>
                   ))}
                   <div className="bg-red-400">
-                    <h1 className="text-center p-3">Personas en cola: {cola.length}</h1>
+                    <h1 className="text-center p-3 font-bold">Personas en cola: {cola.length}</h1>
                     {cola.map((persona, index) => (
                       <div key={index} className="bg-white p-2 m-2 rounded">
                         <Persona persona={persona} />
@@ -309,7 +393,7 @@ function App() {
                     ))}
                   </div>
                   <div className="bg-green-400">
-                    <h1 className="text-center p-3">Personas en llamada: {agentes.filter(agente => agente.personaLlamada).length}</h1>
+                    <h1 className="text-center p-3 font-bold">Personas en llamada: {agentes.filter(agente => agente.personaLlamada).length}</h1>
                     {agentes.some(agente => agente.personaLlamada) ? (
                       agentes.filter(agente => agente.personaLlamada).map((agente, index) => (
                         <Persona key={index} persona={agente.personaLlamada} />
