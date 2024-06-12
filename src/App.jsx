@@ -3,7 +3,7 @@ import agenteImg from './assets/gerente.png';
 import { db } from '../src/data/db.js';
 import Persona from './Persona.jsx';
 import * as math from 'mathjs';
-import { calcularP, calcularL, calcularLq, calcularP0, calcularPw, calcularW, calcularWq } from './data/metodoscolas.js';
+import { calcularL, calcularLq, calcularPw, calcularW, calcularWq } from './data/metodoscolas.js';
 
 function App() {
   const [cola, setCola] = useState([]);
