@@ -109,7 +109,6 @@ function App() {
         nuevaLlamada();
       }, intervalo);
     }
-
     return () => {
       clearInterval(intervaloLlamadas);
     };
@@ -251,7 +250,7 @@ function App() {
       }
     ]
   };
-  
+
   const optionsBar = {
     indexAxis: 'y',
     scales: {
@@ -266,7 +265,7 @@ function App() {
         display: true,
         text: 'Resultados de la Simulación',
         font: {
-          size: 24 
+          size: 24
         }
       },
       legend: {
@@ -278,7 +277,6 @@ function App() {
       }
     }
   };
-  
 
   return (
     <div>
